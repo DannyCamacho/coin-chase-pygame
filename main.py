@@ -31,8 +31,6 @@ class Game:
                     Enemy(self, j, i)
                 if col == "P":
                     self.player = Player(self, j, i)
-                if col == ".":
-                    pass
 
     def new(self):  # a new game starts
         self.playing = True
