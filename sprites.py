@@ -234,6 +234,11 @@ class Enemy(pygame.sprite.Sprite):
             elif direction[1] > self.rect.x / 32:
                 self.x_change += ENEMY_SPEED
                 self.facing = 'right'
+            if self.game.pathing:
+                for sprite in self.game.path:
+                    sprite.kill()
+                for movement in movement_path:
+                    Path(self.game, movement[1], movement[0])
 
     def collide_blocks(self, direction):
         if direction == "x":
@@ -298,7 +303,7 @@ class Block(pygame.sprite.Sprite):
         self.width = TILESIZE
         self.height = TILESIZE
 
-        self.image = self.game.terrain_spritesheet.get_sprite(960, 448, self.width, self.height)
+        self.image = self.game.terrain_spritesheet.get_sprite(448, 448, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -318,6 +323,28 @@ class Ground(pygame.sprite.Sprite):
         self.height = TILESIZE
 
         self.image = self.game.terrain_spritesheet.get_sprite(64, 352, self.width, self.height)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+
+class Path(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = PATH_LAYER
+        self.groups = self.game.all_sprites, self.game.path
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.width = TILESIZE
+        self.height = TILESIZE
+
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.fill(RED)
+
+        self.image = self.game.terrain_spritesheet.get_sprite(256, 352, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -552,7 +579,7 @@ def a_star_search(grid, src, dest):
         closed_list[i][j] = True
 
         # For each direction, check the successors
-        directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         for dir in directions:
             new_i = i + dir[0]
             new_j = j + dir[1]
