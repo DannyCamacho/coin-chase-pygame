@@ -1,8 +1,9 @@
 import pygame
-from config import *
 import math
 import random
 import pathfinding
+
+from config import *
 
 
 class Spritesheet:
@@ -66,20 +67,6 @@ class Player(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
 
-    # def move_camera(self, direction):
-    #     if direction == 'left':
-    #         for sprite in self.game.all_sprites:
-    #             sprite.rect.x += PLAYER_SPEED
-    #     if direction == 'right':
-    #         for sprite in self.game.all_sprites:
-    #             sprite.rect.x -= PLAYER_SPEED
-    #     if direction == 'up':
-    #         for sprite in self.game.all_sprites:
-    #             sprite.rect.y += PLAYER_SPEED
-    #     if direction == 'down':
-    #         for sprite in self.game.all_sprites:
-    #             sprite.rect.y -= PLAYER_SPEED
-
     def movement(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -109,11 +96,6 @@ class Player(pygame.sprite.Sprite):
                     self.rect.x = hits[0].rect.left - self.rect.width
                 if self.x_change < 0:
                     self.rect.x = hits[0].rect.right
-            # else:
-            #     if self.x_change < 0:
-            #         self.move_camera('left')
-            #     elif self.x_change > 0:
-            #         self.move_camera('right')
         if direction == "y":
             hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
             if hits:
@@ -121,11 +103,6 @@ class Player(pygame.sprite.Sprite):
                     self.rect.y = hits[0].rect.top - self.rect.height
                 if self.y_change < 0:
                     self.rect.y = hits[0].rect.bottom
-            # else:
-            #     if self.y_change < 0:
-            #         self.move_camera('up')
-            #     elif self.y_change > 0:
-            #         self.move_camera('down')
 
     def animate(self):
         if self.facing == "down":
@@ -199,7 +176,6 @@ class Enemy(pygame.sprite.Sprite):
         self.right_animations = [self.game.enemy_spritesheet.get_sprite(3, 66, self.width, self.height),
                                  self.game.enemy_spritesheet.get_sprite(35, 66, self.width, self.height),
                                  self.game.enemy_spritesheet.get_sprite(68, 66, self.width, self.height)]
-        self.gmap = Gamemap(self.game)
 
     def update(self):
         self.movement()
@@ -219,7 +195,7 @@ class Enemy(pygame.sprite.Sprite):
         x2 = math.floor(self.game.player.rect.y / TILESIZE)
         y2 = math.floor(self.game.player.rect.x / TILESIZE)
 
-        movement_path = pathfinding.a_star_search(self.gmap.game_map, [x1, y1], [x2, y2])
+        movement_path = pathfinding.a_star_search(self.game.game_map, [x1, y1], [x2, y2])
         if movement_path:
             direction = movement_path[0]
             if direction[0] < self.rect.y / TILESIZE:
@@ -450,17 +426,3 @@ class Attack(pygame.sprite.Sprite):
             self.animation_loop += 0.5
             if self.animation_loop >= 5:
                 self.kill()
-
-
-class Gamemap:
-    def __init__(self, game):
-        self.game = game
-        self.game_map = []
-        for row in tilemap:
-            game_map_row = []
-            for letter in row:
-                if letter == 'B':
-                    game_map_row.append(0)
-                else:
-                    game_map_row.append(1)
-            self.game_map.append(game_map_row)

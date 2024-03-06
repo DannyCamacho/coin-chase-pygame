@@ -12,6 +12,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.pathing = False
+        self.game_map = []
 
         self.font = pygame.font.Font('assets/general_font.ttf', 64)
 
@@ -33,6 +34,17 @@ class Game:
                 if col == "P":
                     self.player = Player(self, j, i)
 
+    def create_game_map(self):
+        self.game_map = []
+        for row in tilemap:
+            game_map_row = []
+            for letter in row:
+                if letter == 'B':
+                    game_map_row.append(0)
+                else:
+                    game_map_row.append(1)
+            self.game_map.append(game_map_row)
+
     def new(self):  # a new game starts
         self.playing = True
 
@@ -43,6 +55,7 @@ class Game:
         self.path = pygame.sprite.LayeredUpdates()
 
         self.draw_tilemap()
+        self.create_game_map()
 
     def events(self):  # game loop events
         for event in pygame.event.get():
