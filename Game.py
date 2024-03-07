@@ -74,8 +74,6 @@ class Game:
                         Attack(self, self.player.rect.x + TILESIZE, self.player.rect.y)
                 if event.key == pygame.K_p:
                     self.pathing = not self.pathing
-                    for sprite in self.path:
-                        sprite.kill()
 
     def update(self):  # game loop updates
         self.all_sprites.update()
@@ -85,6 +83,8 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.clock.tick(FPS)
         pygame.display.update()
+        for sprite in self.path:
+            sprite.kill()
 
     def main(self):  # game loop
         while self.playing:
@@ -159,7 +159,7 @@ class Game:
     def intro_screen(self):
         intro = True
 
-        title = self.font.render('A* Algo Demo', True, BLACK)
+        title = self.font.render('A* Demo', True, BLACK)
         title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2))
 
         play_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, 'Play', 32)

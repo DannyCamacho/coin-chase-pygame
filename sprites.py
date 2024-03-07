@@ -82,6 +82,36 @@ class Player(pygame.sprite.Sprite):
             self.y_change += PLAYER_SPEED
             self.facing = 'down'
 
+        # x1 = math.floor(self.rect.y / TILESIZE)
+        # y1 = math.floor(self.rect.x / TILESIZE)
+        #
+        # player_map = [row[:] for row in self.game.game_map]
+        #
+        # for enemy in self.game.enemies:
+        #     x = int(enemy.rect.x / 32)
+        #     y = int(enemy.rect.y / 32)
+        #     player_map[y][x] = 0
+        #
+        # movement_path = pathfinding.a_star_search(player_map, [x1, y1], [1, 1])
+        # if movement_path:
+        #     print(movement_path)
+        #     direction = movement_path[0]
+        #     if direction[0] < self.rect.y / TILESIZE:
+        #         self.y_change -= PLAYER_SPEED
+        #         self.facing = 'up'
+        #     elif direction[0] > self.rect.y / TILESIZE:
+        #         self.y_change += PLAYER_SPEED
+        #         self.facing = 'down'
+        #     if direction[1] < self.rect.x / TILESIZE:
+        #         self.x_change -= PLAYER_SPEED
+        #         self.facing = 'left'
+        #     elif direction[1] > self.rect.x / TILESIZE:
+        #         self.x_change += PLAYER_SPEED
+        #         self.facing = 'right'
+        #     if self.game.pathing:
+        #         for movement in movement_path:
+        #             Path(self.game, movement[1], movement[0])
+
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
         if hits:
@@ -211,8 +241,6 @@ class Enemy(pygame.sprite.Sprite):
                 self.x_change += ENEMY_SPEED
                 self.facing = 'right'
             if self.game.pathing:
-                for sprite in self.game.path:
-                    sprite.kill()
                 for movement in movement_path:
                     Path(self.game, movement[1], movement[0])
 

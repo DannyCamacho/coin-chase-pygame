@@ -9,7 +9,7 @@ BLOCK_LAYER = 3
 PATH_LAYER = 2
 GROUND_LAYER = 1
 
-PLAYER_SPEED = 3
+PLAYER_SPEED = 2.5
 ENEMY_SPEED = 2.5
 
 RED = (255, 0, 0)
@@ -23,18 +23,18 @@ MAP_HEIGHT = 15
 
 tilemap = [
     'BBBBBBBBBBBBBBBBBBBB',
-    'B.B..............BBB',
+    'B................BBB',
     'BEB....B...B..B....B',
     'B.B.BBBB..B..BBBB..B',
     'B.B....B.......B...B',
     'B.B..B.B...B......BB',
     'B.B.BB.B..BBBBBBB..B',
-    'B.B..B.B.......P...B',
+    'B.B..B.B..........PB',
     'B.B....BBBBBBBBB..BB',
     'B.B..B..B.....B....B',
     'B.B.BB..BB..B..B...B',
     'B.B..............B.B',
-    'B.BBBB..BBBBB..BBB.B',
+    'BEBBBB..BBBBB..BBB.B',
     'B..................B',
     'BBBBBBBBBBBBBBBBBBBB',
 ]
