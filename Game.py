@@ -16,7 +16,7 @@ class Game:
         self.pathing = False
         self.game_map = []
 
-        self.font = pygame.font.Font('assets/general_font.ttf', 64)
+        self.font = pygame.font.Font('assets/title_font.ttf', 64)
         self.character_spritesheet = Spritesheet('img/character.png')
         self.enemy_spritesheet = Spritesheet('img/enemy.png')
         self.attack_spritesheet = Spritesheet('img/attack.png')

@@ -392,7 +392,7 @@ class Target(pygame.sprite.Sprite):
 
 class Button:
     def __init__(self, x, y, width, height, fg, bg, content, font_size):
-        self.font = pygame.font.Font('assets/title_font.ttf', font_size)
+        self.font = pygame.font.Font('assets/button_font.ttf', font_size)
         self.content = content
 
         self.x = x
