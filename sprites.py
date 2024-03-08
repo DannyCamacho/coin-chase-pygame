@@ -121,7 +121,7 @@ class Player(pygame.sprite.Sprite):
                     self.facing = 'right'
                 if self.game.pathing:
                     for movement in movement_path:
-                        Path(self.game, movement[1], movement[0])
+                        Path(self.game, movement[1], movement[0], "player")
 
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
@@ -258,7 +258,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.facing = 'right'
             if self.game.pathing:
                 for movement in movement_path:
-                    Path(self.game, movement[1], movement[0])
+                    Path(self.game, movement[1], movement[0], "enemy")
 
     def collide_blocks(self, direction):
         if direction == "x":
@@ -350,7 +350,7 @@ class Ground(pygame.sprite.Sprite):
 
 
 class Path(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, entity):
         self.game = game
         self._layer = PATH_LAYER
         self.groups = self.game.all_sprites, self.game.path
@@ -361,8 +361,10 @@ class Path(pygame.sprite.Sprite):
         self.width = TILESIZE
         self.height = TILESIZE
 
-        self.image = self.game.terrain_spritesheet.get_sprite(256, 352, self.width, self.height)
-        # self.image = self.game.terrain_spritesheet.get_sprite(480, 32, self.width, self.height)
+        if entity == "player":
+            self.image = self.game.terrain_spritesheet.get_sprite(256, 352, self.width, self.height)
+        elif entity == "enemy":
+            self.image = self.game.terrain_spritesheet.get_sprite(288, 352, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
