@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
         self.animate()
 
         self.collide_enemy()
+        self.collide_targets()
         self.rect.x += self.x_change
         self.collide_blocks('x')
         self.rect.y += self.y_change
@@ -68,54 +69,69 @@ class Player(pygame.sprite.Sprite):
         self.y_change = 0
 
     def movement(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.x_change -= PLAYER_SPEED
-            self.facing = 'left'
-        if keys[pygame.K_RIGHT]:
-            self.x_change += PLAYER_SPEED
-            self.facing = 'right'
-        if keys[pygame.K_UP]:
-            self.y_change -= PLAYER_SPEED
-            self.facing = 'up'
-        if keys[pygame.K_DOWN]:
-            self.y_change += PLAYER_SPEED
-            self.facing = 'down'
+        if not self.game.player_ai:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT]:
+                self.x_change -= PLAYER_SPEED
+                self.facing = 'left'
+            if keys[pygame.K_RIGHT]:
+                self.x_change += PLAYER_SPEED
+                self.facing = 'right'
+            if keys[pygame.K_UP]:
+                self.y_change -= PLAYER_SPEED
+                self.facing = 'up'
+            if keys[pygame.K_DOWN]:
+                self.y_change += PLAYER_SPEED
+                self.facing = 'down'
+        else:
+            x1 = math.floor(self.rect.y / TILESIZE)
+            y1 = math.floor(self.rect.x / TILESIZE)
+            x2 = 0
+            y2 = 0
+            closest_target = float('inf')
 
-        # x1 = math.floor(self.rect.y / TILESIZE)
-        # y1 = math.floor(self.rect.x / TILESIZE)
-        #
-        # player_map = [row[:] for row in self.game.game_map]
-        #
-        # for enemy in self.game.enemies:
-        #     x = int(enemy.rect.x / 32)
-        #     y = int(enemy.rect.y / 32)
-        #     player_map[y][x] = 0
-        #
-        # movement_path = pathfinding.a_star_search(player_map, [x1, y1], [1, 1])
-        # if movement_path:
-        #     print(movement_path)
-        #     direction = movement_path[0]
-        #     if direction[0] < self.rect.y / TILESIZE:
-        #         self.y_change -= PLAYER_SPEED
-        #         self.facing = 'up'
-        #     elif direction[0] > self.rect.y / TILESIZE:
-        #         self.y_change += PLAYER_SPEED
-        #         self.facing = 'down'
-        #     if direction[1] < self.rect.x / TILESIZE:
-        #         self.x_change -= PLAYER_SPEED
-        #         self.facing = 'left'
-        #     elif direction[1] > self.rect.x / TILESIZE:
-        #         self.x_change += PLAYER_SPEED
-        #         self.facing = 'right'
-        #     if self.game.pathing:
-        #         for movement in movement_path:
-        #             Path(self.game, movement[1], movement[0])
+            player_map = [row[:] for row in self.game.game_map]
+
+            for enemy in self.game.enemies:
+                x = int(enemy.rect.x / TILESIZE)
+                y = int(enemy.rect.y / TILESIZE)
+                player_map[y][x] = 0
+
+            for target in self.game.targets:
+                dist = ((target.rect.y - self.rect.y) ** 2 + (target.rect.x - self.rect.x) ** 2) ** 0.5
+                if dist < closest_target:
+                    x2 = math.floor(target.rect.y / TILESIZE)
+                    y2 = math.floor(target.rect.x / TILESIZE)
+                    closest_target = dist
+
+            movement_path = pathfinding.a_star_search(player_map, [x1, y1], [x2, y2])
+            if movement_path:
+                direction = movement_path[0]
+                if direction[0] < self.rect.y / TILESIZE:
+                    self.y_change -= PLAYER_SPEED
+                    self.facing = 'up'
+                elif direction[0] > self.rect.y / TILESIZE:
+                    self.y_change += PLAYER_SPEED
+                    self.facing = 'down'
+                if direction[1] < self.rect.x / TILESIZE:
+                    self.x_change -= PLAYER_SPEED
+                    self.facing = 'left'
+                elif direction[1] > self.rect.x / TILESIZE:
+                    self.x_change += PLAYER_SPEED
+                    self.facing = 'right'
+                if self.game.pathing:
+                    for movement in movement_path:
+                        Path(self.game, movement[1], movement[0])
 
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
         if hits:
             self.kill()
+            self.game.playing = False
+
+    def collide_targets(self):
+        pygame.sprite.spritecollide(self, self.game.targets, True)
+        if not self.game.targets:
             self.game.playing = False
 
     def collide_blocks(self, direction):
@@ -346,6 +362,26 @@ class Path(pygame.sprite.Sprite):
         self.height = TILESIZE
 
         self.image = self.game.terrain_spritesheet.get_sprite(256, 352, self.width, self.height)
+        # self.image = self.game.terrain_spritesheet.get_sprite(480, 32, self.width, self.height)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+
+class Target(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = TARGET_LAYER
+        self.groups = self.game.all_sprites, self.game.targets
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.width = TILESIZE
+        self.height = TILESIZE
+
+        self.image = self.game.target_spritesheet.get_sprite(0, 0, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
