@@ -24,15 +24,15 @@ MAP_HEIGHT = 15
 
 tilemap = [
     'BBBBBBBBBBBBBBBBBBBB',
-    'BT...............BBB',
+    'BT..BB...B.......BBB',
     'BEB....B...B..B...TB',
     'B.B.BBBB..B..BBBB..B',
     'B.B....B.......B...B',
     'B....B.B...B......BB',
     'B.B.BB.B..BBBBBBB..B',
     'B.B..B.B..........PB',
-    'B.B....BBBBBBBBB..BB',
-    'B....B..B.....B....B',
+    'B.BB...BBBBBBBBB..BB',
+    'B....B..B.....BB...B',
     'B.B.BB..BB..B..B...B',
     'B.B..............B.B',
     'B.BBBB..BBBBB..BBB.B',

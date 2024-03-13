@@ -130,7 +130,9 @@ class Player(pygame.sprite.Sprite):
             self.game.playing = False
 
     def collide_targets(self):
-        pygame.sprite.spritecollide(self, self.game.targets, True)
+        hits = pygame.sprite.spritecollide(self, self.game.targets, True)
+        if hits:
+            self.game.spawn_enemy()
         if not self.game.targets:
             self.game.playing = False
 

@@ -82,7 +82,7 @@ class Game:
                 if event.key == pygame.K_p:
                     self.pathing = not self.pathing
                 if event.key == pygame.K_e:
-                    Enemy(self, 1, 1)
+                    self.spawn_enemy()
                 if event.key == pygame.K_a:
                     self.player_ai = not self.player_ai
 
@@ -113,7 +113,6 @@ class Game:
             background = self.game_over_background
 
         title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2))
-
         restart_button = Button(10, WIN_HEIGHT - 120, 120, 50, WHITE, BLACK, 'Restart', 32)
         quit_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, 'Quit', 32)
 
@@ -146,7 +145,6 @@ class Game:
 
         title = self.font.render('A* Game Demo', True, BLACK)
         title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2))
-
         play_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, 'Play', 32)
 
         while intro:
@@ -166,3 +164,11 @@ class Game:
             self.screen.blit(play_button.image, play_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
+
+    def spawn_enemy(self):
+        i = j = dist = 0
+        while self.game_map[i][j] == 0 or dist < 10:
+            i = random.choice(range(len(self.game_map) - 1))
+            j = random.choice(range(len(self.game_map[0]) - 1))
+            dist = ((i - self.player.rect.y / 32) ** 2 + (j - self.player.rect.x / 32) ** 2) ** 0.5
+        Enemy(self, j, i)
