@@ -32,7 +32,7 @@ tilemap = [
     'B.B.BB.B..BBBBBBB..B',
     'B.B..B.B..........PB',
     'B.BB...BBBBBBBBB..BB',
-    'B....B..B.....BB...B',
+    'B....B..B.....BBB..B',
     'B.B.BB..BB..B..B...B',
     'B.B..............B.B',
     'B.BBBB..BBBBB..BBB.B',
