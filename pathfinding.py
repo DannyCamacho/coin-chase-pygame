@@ -3,13 +3,15 @@ from config import *
 
 
 class Cell:
-    def __init__(self):
-        self.parent_i = 0  # Parent cell's row index
-        self.parent_j = 0  # Parent cell's column index
-        self.f = float('inf')  # Total cost of the cell (g + h)
-        self.g = float('inf')  # Cost from start to this cell
-        self.h = 0  # Heuristic cost from this cell to destination
-        self.closed = False  # True is visited, False is unvisited
+    def __init__(self, i=0, j=0, parent_i=0, parent_j=0, f=float('inf'), g=float('inf'), h=0, closed=False):
+        self.i = i  # Cell's row index
+        self.j = j  # Cell's column index
+        self.parent_i = parent_i  # Parent cell's row index
+        self.parent_j = parent_j  # Parent cell's column index
+        self.f = f  # Total cost of the cell (g + h)
+        self.g = g  # Cost from start to this cell
+        self.h = h  # Heuristic cost from this cell to destination
+        self.closed = closed  # closed list: False is open, True is closed
 
 
 # Calculate the heuristic h-value of a cell (Euclidean distance to destination)
@@ -35,16 +37,16 @@ def is_destination(row, col, dest):
 # Trace the path from source to destination
 def trace_path(cell, dest):
     path = []
-    row = dest[0]
-    col = dest[1]
+    i = dest[0]
+    j = dest[1]
+    temp_cell = cell[(i, j)]
 
     # Trace the path from destination to source using parent cells
-    while not (cell[row][col].parent_i == row and cell[row][col].parent_j == col):
-        path.append((row, col))
-        temp_row = cell[row][col].parent_i
-        temp_col = cell[row][col].parent_j
-        row = temp_row
-        col = temp_col
+    while not (temp_cell.parent_i == i and temp_cell.parent_j == j):
+        path.append((i, j))
+        i = temp_cell.parent_i
+        j = temp_cell.parent_j
+        temp_cell = cell[(i, j)]
 
     # Reverse the path to get the path from source to destination
     path.reverse()
@@ -53,59 +55,49 @@ def trace_path(cell, dest):
 
 # Implement the A* search algorithm
 def a_star_search(grid, src, dest):
-    # Initialize the details of each cell for size of map
-    cell = [[Cell() for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
-
     # Initialize the start cell details
-    i = src[0]
-    j = src[1]
-    cell[i][j].f = 0
-    cell[i][j].g = 0
-    cell[i][j].parent_i = i
-    cell[i][j].parent_j = j
+    start = Cell(i=src[0], j=src[1], parent_i=src[0], parent_j=src[1], f=0, g=0)
 
     # Initialize the open list (cells to be visited) with the start cell: (f, row, col)
     open_list = []
-    heapq.heappush(open_list, (0.0, i, j))
-
-    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    cell_data = {(start.i, start.j): start}
+    heapq.heappush(open_list, (0.0, start.i, start.j))
 
     # Main loop of A* search algorithm
-    while len(open_list) > 0:
+    while open_list:
         # Pop the cell with the smallest f value from the open list
         p = heapq.heappop(open_list)
 
         # Mark the cell as visited
-        i = p[1]
-        j = p[2]
-        cell[i][j].closed = True
+        cell_data[(p[1], p[2])].closed = True
 
-        for direction in directions:
-            new_i = i + direction[0]
-            new_j = j + direction[1]
+        # If the top is the destination
+        if is_destination(p[1], p[2], dest):
+            # Trace and return the path from source to destination
+            return trace_path(cell_data, dest)
+
+        for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            i_new = p[1] + direction[0]
+            j_new = p[2] + direction[1]
+
+            temp_cell = cell_data.get((i_new, j_new), None)
+            if not temp_cell:
+                temp_cell = Cell(i=i_new, j=j_new, parent_i=p[1], parent_j=p[2])
+                cell_data[(i_new, j_new)] = temp_cell
 
             # If the successor is valid, unblocked, and not visited
-            if is_valid(new_i, new_j) and is_unblocked(grid, new_i, new_j) and not cell[new_i][new_j].closed:
-                # If the successor is the destination
-                if is_destination(new_i, new_j, dest):
-                    # Set the parent of the destination cell
-                    cell[new_i][new_j].parent_i = i
-                    cell[new_i][new_j].parent_j = j
-                    # Trace and return the path from source to destination
-                    return trace_path(cell, dest)
-                else:
-                    # Calculate the new f, g, and h values
-                    g_new = cell[i][j].g + 1.0
-                    h_new = calculate_h_value(new_i, new_j, dest)
-                    f_new = g_new + h_new
+            if is_valid(i_new, j_new) and is_unblocked(grid, i_new, j_new) and not temp_cell.closed:
+                # Calculate the new f, g, and h values
+                g_new = cell_data[(p[1], p[2])].g + 1.0
+                h_new = calculate_h_value(i_new, j_new, dest)
+                f_new = g_new + h_new
 
-                    # If the cell is not in the open list or the new f value is smaller
-                    if cell[new_i][new_j].f == float('inf') or f_new < cell[new_i][new_j].f:
-                        # Add the cell to the open list
-                        heapq.heappush(open_list, (f_new, new_i, new_j))
-                        # Update the cell details
-                        cell[new_i][new_j].f = f_new
-                        cell[new_i][new_j].g = g_new
-                        cell[new_i][new_j].h = h_new
-                        cell[new_i][new_j].parent_i = i
-                        cell[new_i][new_j].parent_j = j
+                # If the cell is not in the open list or the new f value is smaller
+                if f_new < temp_cell.f:
+                    # Update the cell details
+                    temp_cell.f = f_new
+                    temp_cell.g = g_new
+                    temp_cell.h = h_new
+
+                    # Add the cell to the open list
+                    heapq.heappush(open_list, (f_new, i_new, j_new))
