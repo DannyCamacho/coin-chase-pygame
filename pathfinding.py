@@ -59,9 +59,8 @@ def a_star_search(grid, src, dest):
     start = Cell(i=src[0], j=src[1], parent_i=src[0], parent_j=src[1], f=0, g=0)
 
     # Initialize the open list (cells to be visited) with the start cell: (f, row, col)
-    open_list = []
+    open_list = [(0.0, start.i, start.j)]
     cell_data = {(start.i, start.j): start}
-    heapq.heappush(open_list, (0.0, start.i, start.j))
 
     # Main loop of A* search algorithm
     while open_list:
@@ -81,8 +80,9 @@ def a_star_search(grid, src, dest):
             j_new = p[2] + direction[1]
 
             temp_cell = cell_data.get((i_new, j_new), None)
+
             if not temp_cell:
-                temp_cell = Cell(i=i_new, j=j_new, parent_i=p[1], parent_j=p[2])
+                temp_cell = Cell(i=i_new, j=j_new)
                 cell_data[(i_new, j_new)] = temp_cell
 
             # If the successor is valid, unblocked, and not visited
@@ -95,6 +95,8 @@ def a_star_search(grid, src, dest):
                 # If the cell is not in the open list or the new f value is smaller
                 if f_new < temp_cell.f:
                     # Update the cell details
+                    temp_cell.parent_i = p[1]
+                    temp_cell.parent_j = p[2]
                     temp_cell.f = f_new
                     temp_cell.g = g_new
                     temp_cell.h = h_new
