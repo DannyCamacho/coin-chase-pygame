@@ -1,5 +1,5 @@
-from config import *
 import heapq
+from config import *
 
 
 class Cell:
@@ -9,6 +9,12 @@ class Cell:
         self.f = float('inf')  # Total cost of the cell (g + h)
         self.g = float('inf')  # Cost from start to this cell
         self.h = 0  # Heuristic cost from this cell to destination
+        self.closed = False  # True is visited, False is unvisited
+
+
+# Calculate the heuristic h-value of a cell (Euclidean distance to destination)
+def calculate_h_value(row, col, dest):
+    return ((row - dest[0]) ** 2 + (col - dest[1]) ** 2) ** 0.5
 
 
 # Check if a cell is valid (within the grid)
@@ -24,11 +30,6 @@ def is_unblocked(grid, row, col):
 # Check if a cell is the destination
 def is_destination(row, col, dest):
     return row == dest[0] and col == dest[1]
-
-
-# Calculate the heuristic h-value of a cell (Euclidean distance to destination)
-def calculate_h_value(row, col, dest):
-    return ((row - dest[0]) ** 2 + (col - dest[1]) ** 2) ** 0.5
 
 
 # Trace the path from source to destination
@@ -52,8 +53,6 @@ def trace_path(cell, dest):
 
 # Implement the A* search algorithm
 def a_star_search(grid, src, dest):
-    # Initialize the closed list (visited cells), 'False' is not visited
-    closed_list = [[False for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
     # Initialize the details of each cell for size of map
     cell = [[Cell() for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
 
@@ -62,13 +61,14 @@ def a_star_search(grid, src, dest):
     j = src[1]
     cell[i][j].f = 0
     cell[i][j].g = 0
-    cell[i][j].h = 0
     cell[i][j].parent_i = i
     cell[i][j].parent_j = j
 
     # Initialize the open list (cells to be visited) with the start cell: (f, row, col)
     open_list = []
     heapq.heappush(open_list, (0.0, i, j))
+
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
     # Main loop of A* search algorithm
     while len(open_list) > 0:
@@ -78,18 +78,14 @@ def a_star_search(grid, src, dest):
         # Mark the cell as visited
         i = p[1]
         j = p[2]
-        closed_list[i][j] = True
+        cell[i][j].closed = True
 
-        # For each direction, check the successors
-        # directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
-        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-
-        for dir in directions:
-            new_i = i + dir[0]
-            new_j = j + dir[1]
+        for direction in directions:
+            new_i = i + direction[0]
+            new_j = j + direction[1]
 
             # If the successor is valid, unblocked, and not visited
-            if is_valid(new_i, new_j) and is_unblocked(grid, new_i, new_j) and not closed_list[new_i][new_j]:
+            if is_valid(new_i, new_j) and is_unblocked(grid, new_i, new_j) and not cell[new_i][new_j].closed:
                 # If the successor is the destination
                 if is_destination(new_i, new_j, dest):
                     # Set the parent of the destination cell
