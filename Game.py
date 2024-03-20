@@ -8,6 +8,8 @@ class Game:
     def __init__(self):
         pygame.init()
 
+        pygame.display.set_caption("Coin Chase")
+        pygame.display.set_icon(pygame.image.load("img/star.png"))
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.playing = False
@@ -16,7 +18,7 @@ class Game:
         self.pathing = False
         self.game_map = []
 
-        self.font = pygame.font.Font('assets/title_font.ttf', 72)
+        self.font = pygame.font.Font('assets/title_font.ttf', 96)
         self.character_spritesheet = Spritesheet('img/character.png')
         self.enemy_spritesheet = Spritesheet('img/enemy.png')
         self.attack_spritesheet = Spritesheet('img/attack.png')
@@ -149,7 +151,7 @@ class Game:
         intro = True
 
         title = self.font.render('Coin Chase', True, BLACK)
-        title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2))
+        title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2.5))
         play_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, 'Play', 32)
 
         while intro:
