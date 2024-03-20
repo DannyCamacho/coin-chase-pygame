@@ -25,6 +25,9 @@ class Game:
         self.intro_background = pygame.image.load('img/introbackground.png')
         self.game_over_background = pygame.image.load('img/gameover.png')
         self.game_win_background = pygame.image.load('img/gameoverwin.png')
+        self.intro_background = pygame.transform.scale(self.intro_background, (1280, 960))
+        self.game_over_background = pygame.transform.scale(self.game_over_background, (1280, 960))
+        self.game_win_background = pygame.transform.scale(self.game_win_background, (1280, 960))
 
 
     def draw_tilemap(self):
