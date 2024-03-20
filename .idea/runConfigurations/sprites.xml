@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="sprites" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-    <module name="pygame-rpg" />
+    <module name="coin-chase-pygame" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
