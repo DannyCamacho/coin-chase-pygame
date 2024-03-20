@@ -8,6 +8,8 @@ class Game:
     def __init__(self):
         pygame.init()
 
+        pygame.display.set_caption("Coin Chase")
+        pygame.display.set_icon(pygame.image.load("img/star.png"))
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.playing = False
@@ -25,7 +27,9 @@ class Game:
         self.intro_background = pygame.image.load('img/introbackground.png')
         self.game_over_background = pygame.image.load('img/gameover.png')
         self.game_win_background = pygame.image.load('img/gameoverwin.png')
-
+        self.intro_background = pygame.transform.scale(self.intro_background, (WIN_WIDTH, WIN_HEIGHT))
+        self.game_over_background = pygame.transform.scale(self.game_over_background, (WIN_WIDTH, WIN_HEIGHT))
+        self.game_win_background = pygame.transform.scale(self.game_win_background, (WIN_WIDTH, WIN_HEIGHT))
 
     def draw_tilemap(self):
         for i, row in enumerate(tilemap):
@@ -146,7 +150,7 @@ class Game:
         intro = True
 
         title = self.font.render('Coin Chase', True, BLACK)
-        title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2))
+        title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2.5))
         play_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, 'Play', 32)
 
         while intro:
