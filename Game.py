@@ -16,7 +16,7 @@ class Game:
         self.pathing = False
         self.game_map = []
 
-        self.font = pygame.font.Font('assets/title_font.ttf', 64)
+        self.font = pygame.font.Font('assets/title_font.ttf', 72)
         self.character_spritesheet = Spritesheet('img/character.png')
         self.enemy_spritesheet = Spritesheet('img/enemy.png')
         self.attack_spritesheet = Spritesheet('img/attack.png')
@@ -24,6 +24,8 @@ class Game:
         self.target_spritesheet = Spritesheet('img/star.png')
         self.intro_background = pygame.image.load('img/introbackground.png')
         self.game_over_background = pygame.image.load('img/gameover.png')
+        self.game_win_background = pygame.image.load('img/gameoverwin.png')
+
 
     def draw_tilemap(self):
         for i, row in enumerate(tilemap):
@@ -107,7 +109,7 @@ class Game:
     def game_over(self):
         if not self.targets:
             title = self.font.render('You Win!', True, WHITE)
-            background = self.intro_background
+            background = self.game_win_background
         else:
             title = self.font.render('Game Over', True, WHITE)
             background = self.game_over_background
@@ -143,7 +145,7 @@ class Game:
     def intro_screen(self):
         intro = True
 
-        title = self.font.render('A* Game Demo', True, BLACK)
+        title = self.font.render('Coin Chase', True, BLACK)
         title_rect = title.get_rect(center=(WIN_WIDTH / 2, WIN_HEIGHT / 2))
         play_button = Button(10, WIN_HEIGHT - 60, 120, 50, WHITE, BLACK, 'Play', 32)
 
