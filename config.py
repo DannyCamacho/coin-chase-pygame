@@ -1,5 +1,5 @@
 WIN_WIDTH = 1280
-WIN_HEIGHT = 896
+WIN_HEIGHT = 800
 TILESIZE = 32
 FPS = 60
 
@@ -20,7 +20,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 MAP_WIDTH = 40
-MAP_HEIGHT = 28
+MAP_HEIGHT = 25
 
 tilemap = [
     'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
@@ -28,19 +28,16 @@ tilemap = [
     'BEB....B...B..B....B..B....B...B..BT...B',
     'B.B.BB.B.BB..BBBB..BB.B.BB.B.BB..BBBB..B',
     'B.B....B.B....BB...BB.B...TB.B....BB...B',
-    'B....B.B...B......BBB....B.B...B......BB',
+    'B....B.B...B......BB.....B.B...B......BB',
     'B.B.BB....BB.BBBB.....B.BB....BB.BBBB..B',
-    'B.B..B.BB.........PBB.B..B.BB..........B',
-    'B.BB...BB.BBB.BB..BBB.BB...BB.BBB.BB..BB',
+    'B.B..B.BB.........P.B.B..B.BB..........B',
+    'B.BB...BB.BBB.BB..B...BB...B..BBB.BB..BB',
     'B....B........BBB..BB....B........BBB..B',
-    'B.B.BBB.BB.BB..B......B.BBB.BB.BB..B...B',
+    'B.B.BBB.BB.BB..B....B.B.BBB.BB.BB..B...B',
     'B.B..............B.BB.B..............B.B',
-    'B.B.BBB.BBB.BB.BBB.BB.B.BBB.BB..BB.BBB.B',
+    'B.B.BBB.BBB.BB.BBB....B.BBB.BB..BB.BBB.B',
     'B...........B......BB...........BB.....B',
     'B...BB...B.......BB.....BB...B.......BBB',
-    'B.B....B...B..B....B..B....B...B..B....B',
-    'B.B.BB.B.BB..BB..BBB.BB.BB.B.BB..BBBB..B',
-    'B.B....B.B....BB......B....B.B....BB...B',
     'B..T.B.B...B......BBB....B.B...B......BB',
     'B.B.BB....BB.BBBB.....B.BB....BB.BBBB..B',
     'B.B..B.BB...........BBB..B.BB..........B',
