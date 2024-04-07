@@ -36,6 +36,7 @@ def is_destination(row, col, dest):
 
 # Trace the path from source to destination
 def trace_path(cell, dest):
+    # return [key for key, x in cell.items() if x.closed]
     path = []
     i = dest[0]
     j = dest[1]
